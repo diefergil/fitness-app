@@ -311,6 +311,14 @@
                                         {% translate "My preferences" %}
                                     </a>
                                 </li>
+                                <!-- New Subscription Options item -->
+                                <li>
+                                    <a class="dropdown-item"
+                                    href="{% url 'core:user:user_payment' %}">
+                                        {% translate "User payments" %}
+                                    </a>
+                                </li>
+                                <!-- End of new Subscription Options item -->
                                 {% if not trainer_identity %}
                                     <li class="dropdown-divider"></li>
                                     <li>

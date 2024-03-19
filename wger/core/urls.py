@@ -34,7 +34,6 @@ from wger.core.views import (
     weight_units,
 )
 
-
 # sub patterns for languages
 patterns_language = [
     path(
@@ -112,6 +111,7 @@ patterns_user = [
         views.PasswordResetCompleteView.as_view(),
         name='password_reset_complete',
     ),
+    path('user-payment', user.user_payment, name='user_payment'),
 ]
 
 # sub patterns for licenses

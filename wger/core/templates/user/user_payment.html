@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load i18n static wger_extras crispy_forms_tags %}
+
+{% block title %}{% translate "User Payments" %}{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<form method="post" action="{% url 'core:user:user_payment' %}">
+    {% csrf_token %}
+    <fieldset class="mb-3">
+        <legend>{% translate "Payment Details" %}</legend>
+        <div class="mb-3">
+            <label for="creditCardNumber" class="form-label">{% translate "Credit Card Number" %}</label>
+            <input type="text" class="form-control" id="creditCardNumber" name="credit_card_number"
+                placeholder="{% translate '1234 5678 9012 3456' %}">
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label for="cvv" class="form-label">{% translate "CVV" %}</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" placeholder="123">
+            </div>
+            <div class="col-6">
+                <label for="expirationDate" class="form-label">{% translate "Expiration Date" %}</label>
+                <input type="date" class="form-control" id="expirationDate" name="expiration_date">
+            </div>
+        </div>
+    </fieldset>
+    <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+</form>
+{% endblock %}
+
+{% block sidebar %}
+{% if user.userprofile.email_verified %}
+<p>
+    <span class="{% fa_class 'envelope-circle-check' %}  text-success"></span>
+    {% translate "Verified email" %}
+</p>
+{% else %}
+<p>
+    <span class="{% fa_class 'envelope' %}"></span>
+    {% translate "Unverified email" %}
+    <br>
+    <a href="{% url 'core:user:confirm-email' %}">{% translate "Send verification email" %}</a>
+</p>
+{% endif %}
+{% endblock %}

@@ -37,6 +37,8 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.http import (
     HttpResponseForbidden,
     HttpResponseNotFound,
@@ -79,6 +81,7 @@ from rest_framework.authtoken.models import Token
 from wger.config.models import GymConfig
 from wger.core.forms import (
     PasswordConfirmationForm,
+    PaymentForm,
     RegistrationForm,
     RegistrationFormNoCaptcha,
     UserLoginForm,
@@ -96,6 +99,8 @@ from wger.manager.models import (
     WorkoutSession,
 )
 from wger.nutrition.models import NutritionPlan
+
+# from wger.user_payments.models.user_payment import UserPayment
 from wger.utils.api_token import create_token
 from wger.utils.generic_views import (
     WgerFormMixin,
@@ -103,9 +108,6 @@ from wger.utils.generic_views import (
 )
 from wger.utils.language import load_language
 from wger.weight.models import WeightEntry
-
-
-logger = logging.getLogger(__name__)
 
 
 def login(request):
@@ -661,3 +663,29 @@ def confirm_email(request):
         )
 
     return HttpResponseRedirect(reverse('core:dashboard'))
+
+
+# @receiver(post_save, sender=User)
+@login_required
+def user_payment(request):
+    """
+    View to render and process the payment form.
+    """
+    context = {}
+    context.update(csrf(request))
+
+    if request.method == 'POST':
+        form = PaymentForm(request.POST)
+
+    else:
+        data = {
+            'payment_method': 'credit_card',
+            'credit_card_number': '1234 5678 9012 3456',
+            'cvv': '123',
+            'expiration_date': '12/2022',
+        }
+
+    form = PaymentForm(initial=data)
+    context['form'] = form
+
+    return render(request, 'user/user_payment.html', context)
