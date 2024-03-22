@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.template.context_processors import csrf
+from django.shortcuts import redirect
 
 from wger.payments.forms import PaymentForm
 
@@ -23,28 +24,18 @@ def user_subscription(request):
             payment_method_types=['card'],
             line_items=[
                 {
-                    'price': settings.PRODUCT_PRICE,
+                    'price': settings.PRICE_BASIC_SUBSCRIPTION,
                     'quantity': 1,
                 },
             ],
-            mode='payment',
-            customer_creation='always',
-            success_url=settings.REDIRECT_DOMAIN
-            + '/payment_susccesful?session_id={CHECKOUT_SESSION_ID}',
-            cancel_url=settings.REDIRECT_DOMAIN + '/payment_cancelled',
+            mode='subscription',
+            success_url=settings.SITE_URL + '/payment_susccesful?session_id={CHECKOUT_SESSION_ID}',
+            cancel_url=settings.SITE_URL + '/payment_cancelled',
         )
         # form = PaymentForm(request.POST)
-        return HttpResponseRedirect(checkout_session.url, status_code=303)
+        return HttpResponseRedirect(checkout_session.url, status=303)
 
-    else:
-        data = {
-            'payment_method': 'credit_card',
-            'credit_card_number': '1234 5678 9012 3456',
-            'cvv': '123',
-            'expiration_date': '12/2022',
-        }
+    # form = PaymentForm(initial=data)
+    # context['form'] = form
 
-    form = PaymentForm(initial=data)
-    context['form'] = form
-
-    return render(request, 'payments/user_payment.html', context)
+    return render(request, 'payments/user_subscription.html', context)
