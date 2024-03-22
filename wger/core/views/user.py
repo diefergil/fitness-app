@@ -17,26 +17,12 @@
 # Standard Library
 import logging
 
-# Third Party
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import (
-    ButtonHolder,
-    Column,
-    Layout,
-    Row,
-    Submit,
-)
-
 # Django
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
     authenticate,
-)
-from django.contrib.auth import (
     login as django_login,
-)
-from django.contrib.auth import (
     logout as django_logout,
 )
 from django.contrib.auth.decorators import login_required
@@ -68,8 +54,6 @@ from django.urls import (
 from django.utils import translation
 from django.utils.translation import (
     gettext as _,
-)
-from django.utils.translation import (
     gettext_lazy,
 )
 from django.views.generic import (
@@ -77,6 +61,16 @@ from django.views.generic import (
     ListView,
     RedirectView,
     UpdateView,
+)
+
+# Third Party
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import (
+    ButtonHolder,
+    Column,
+    Layout,
+    Row,
+    Submit,
 )
 from django_email_verification import send_email
 from rest_framework.authtoken.models import Token
@@ -102,8 +96,6 @@ from wger.manager.models import (
     WorkoutSession,
 )
 from wger.nutrition.models import NutritionPlan
-
-# from wger.user_payments.models.user_payment import UserPayment
 from wger.utils.api_token import create_token
 from wger.utils.generic_views import (
     WgerFormMixin,
@@ -111,6 +103,9 @@ from wger.utils.generic_views import (
 )
 from wger.utils.language import load_language
 from wger.weight.models import WeightEntry
+
+
+logger = logging.getLogger(__name__)
 
 
 def login(request):
