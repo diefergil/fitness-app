@@ -17,12 +17,26 @@
 # Standard Library
 import logging
 
+# Third Party
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import (
+    ButtonHolder,
+    Column,
+    Layout,
+    Row,
+    Submit,
+)
+
 # Django
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import (
     authenticate,
+)
+from django.contrib.auth import (
     login as django_login,
+)
+from django.contrib.auth import (
     logout as django_logout,
 )
 from django.contrib.auth.decorators import login_required
@@ -37,8 +51,6 @@ from django.contrib.auth.views import (
     PasswordResetConfirmView,
     PasswordResetView,
 )
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.http import (
     HttpResponseForbidden,
     HttpResponseNotFound,
@@ -56,6 +68,8 @@ from django.urls import (
 from django.utils import translation
 from django.utils.translation import (
     gettext as _,
+)
+from django.utils.translation import (
     gettext_lazy,
 )
 from django.views.generic import (
@@ -64,16 +78,6 @@ from django.views.generic import (
     RedirectView,
     UpdateView,
 )
-
-# Third Party
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import (
-    ButtonHolder,
-    Column,
-    Layout,
-    Row,
-    Submit,
-)
 from django_email_verification import send_email
 from rest_framework.authtoken.models import Token
 
@@ -81,7 +85,6 @@ from rest_framework.authtoken.models import Token
 from wger.config.models import GymConfig
 from wger.core.forms import (
     PasswordConfirmationForm,
-    PaymentForm,
     RegistrationForm,
     RegistrationFormNoCaptcha,
     UserLoginForm,
@@ -663,29 +666,3 @@ def confirm_email(request):
         )
 
     return HttpResponseRedirect(reverse('core:dashboard'))
-
-
-# @receiver(post_save, sender=User)
-@login_required
-def user_payment(request):
-    """
-    View to render and process the payment form.
-    """
-    context = {}
-    context.update(csrf(request))
-
-    if request.method == 'POST':
-        form = PaymentForm(request.POST)
-
-    else:
-        data = {
-            'payment_method': 'credit_card',
-            'credit_card_number': '1234 5678 9012 3456',
-            'cvv': '123',
-            'expiration_date': '12/2022',
-        }
-
-    form = PaymentForm(initial=data)
-    context['form'] = form
-
-    return render(request, 'user/user_payment.html', context)
