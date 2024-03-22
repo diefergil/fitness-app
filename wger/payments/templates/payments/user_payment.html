@@ -7,7 +7,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="post" action="{% url 'core:user:user_payment' %}">
+<form method="post" action="{% url 'payments:payments:user_subscription' %}">
     {% csrf_token %}
     <fieldset class="mb-3">
         <legend>{% translate "Payment Details" %}</legend>
