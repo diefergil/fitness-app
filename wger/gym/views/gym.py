@@ -53,6 +53,7 @@ from django.views.generic import (
     ListView,
     UpdateView,
 )
+from django.contrib import messages
 
 # Third Party
 from crispy_forms.helper import FormHelper
@@ -395,6 +396,14 @@ class GymAddUserView(
         Create the user, set the user permissions and gym
         """
         gym = Gym.objects.get(pk=self.kwargs['gym_pk'])
+
+        # Check if the gym already has two users
+        if (
+            gym.userprofile_set.count() >= 3
+        ):  # Assuming User has a reverse relation to UserProfile named 'userprofile_set'
+            messages.error(self.request, 'This gym already has the maximum of 2 members.')
+            return self.form_invalid(form)
+
         password = password_generator()
         user = User.objects.create_user(
             form.cleaned_data['username'], form.cleaned_data['email'], password
