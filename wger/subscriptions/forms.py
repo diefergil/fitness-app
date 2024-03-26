@@ -1,5 +1,9 @@
 # Django
-from crispy_forms.bootstrap import FormActions
+from django import forms
+from django.contrib.auth.models import User
+from django.utils.translation import gettext as _
+
+# Third Party
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     ButtonHolder,
@@ -9,45 +13,14 @@ from crispy_forms.layout import (
     Row,
     Submit,
 )
-from django import forms
-from django.utils.translation import gettext as _
 from django_recaptcha.fields import ReCaptchaField
 from django_recaptcha.widgets import ReCaptchaV3
-from django.contrib.auth.models import User
+
+# wger
+from wger.gym.models import Gym
 
 
-class TrainerFormRecaptcha(forms.ModelForm):
-    phone = forms.CharField(
-        label=_('Phone'),
-        max_length=15,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    owner = forms.CharField(
-        label=_('Owner'),
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    zip_code = forms.CharField(
-        label=_('ZIP Code'),
-        max_length=10,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    city = forms.CharField(
-        label=_('City'),
-        max_length=50,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-    street = forms.CharField(
-        label=_('Street'),
-        max_length=100,
-        required=False,
-        widget=forms.TextInput(attrs={'class': 'form-control'}),
-    )
-
+class GymForm(forms.ModelForm):
     captcha = ReCaptchaField(
         widget=ReCaptchaV3(
             attrs={
@@ -60,28 +33,23 @@ class TrainerFormRecaptcha(forms.ModelForm):
     )
 
     class Meta:
-        model = User
-        fields = ['email', 'phone', 'owner', 'zip_code', 'city', 'street']
+        model = Gym
+        fields = ['name', 'phone', 'email', 'owner', 'zip_code', 'city', 'street']
 
     def __init__(self, *args, **kwargs):
-        super(TrainerFormRecaptcha, self).__init__(*args, **kwargs)
-        self.helper = FormHelper(self)
-        self.helper.form_class = 'form-horizontal'
-        self.helper.label_class = 'col-md-3'
-        self.helper.field_class = 'col-md-9'
-        self.helper.layout = Layout(
-            'email',
-            'phone',
-            'owner',
-            'zip_code',
-            'city',
-            'street',
-            'captcha',
-            FormActions(
-                Submit('save', _('Update'), css_class='btn-primary'),
-                css_class='text-right',
-            ),
-        )
+        user = kwargs.pop('user', None)
+        super(GymForm, self).__init__(*args, **kwargs)
+        if user is not None:
+            if user.is_superuser:
+                # Admin can assign any user as the owner
+                self.fields['owner'].queryset = User.objects.all()
+            else:
+                # Non-admin users can only assign themselves as the owner
+                self.fields['owner'].queryset = User.objects.filter(id=user.id)
+                self.fields['owner'].initial = user.id
+                self.fields[
+                    'owner'
+                ].disabled = True  # Optional: make the field non-editable for non-admins
 
 
 class PaymentForm(forms.Form):

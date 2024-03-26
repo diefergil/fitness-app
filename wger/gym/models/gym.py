@@ -18,6 +18,7 @@
 from django.db import models as m
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.conf import settings
 
 # wger
 from wger.gym.managers import GymManager
@@ -61,11 +62,14 @@ class Gym(m.Model):
     )
     """Email"""
 
-    owner = m.CharField(
+    # allow a registered user to be the owner of a gym
+    owner = m.ForeignKey(
+        settings.AUTH_USER_MODEL,
         verbose_name=_('Owner'),
-        max_length=100,
-        blank=True,
+        on_delete=m.SET_NULL,
         null=True,
+        blank=True,
+        related_name='owned_gyms',
     )
     """Gym owner"""
 

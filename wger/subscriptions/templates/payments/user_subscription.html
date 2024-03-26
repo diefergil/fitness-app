@@ -6,42 +6,76 @@
 {% endblock %}
 
 {% block header %}
+<style>
+    /* Custom CSS to adjust the list and justify text */
+    .card .card-text ul {
+        list-style-type: none;
+        /* Remove bullet points */
+        padding-left: 0;
+        /* Remove padding */
+    }
+
+    .card .card-text ul li {
+        margin-bottom: 0.5em;
+        /* Adjust bottom margin as needed */
+        text-align: justify;
+        /* Justify text */
+    }
+
+    .card .card-text {
+        text-align: justify;
+        /* Justify text for any text outside lists */
+        margin-bottom: 20px;
+        /* Increase space between text and button */
+    }
+
+    .card .card-title {
+        margin-bottom: 20px;
+        /* Increase space between title and text */
+    }
+
+    .card-body {
+        padding: 20px;
+        /* Adjust padding inside card if needed */
+    }
+</style>
 {% endblock %}
+
 
 {% block content %}
 <div class="container mt-5">
     <div class="row justify-content-center">
-
-        <!-- Premium Features Section -->
-        <div class="col-md-6">
-            <div class="card text-center mb-3">
-                <div class="card-body">
-                    <h2 class="card-title">{% translate "Premium Features" %}</h2>
-                    <p class="card-text">{% translate "Upgrade to premium and get additional features like A, B, and C."
-                        %}</p>
-                    <form method="post" action="{% url 'subscriptions:payments:user_subscription' %}">
-                        {% csrf_token %}
-                        <button type="submit" name="subscribe" class="btn btn-primary">{% translate "Subscribe to
-                            Premium" %}</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-
         <!-- Free Features Section -->
         <div class="col-md-6">
             <div class="card text-center">
                 <div class="card-body">
-                    <h2 class="card-title">{% translate "Free Features" %}</h2>
-                    <p class="card-text">{% translate "Enjoy our free features that include X, Y, and Z." %}</p>
+                    <h2 class="card-title">{% translate "Free" %}</h2>
+                    <ul class="card-text">
+                        <li>{% translate "Manage 1 gym" %}</li>
+                    </ul>
                     <form method="post" action="{% url 'subscriptions:payments:user_subscription' %}">
                         {% csrf_token %}
-                        <button type="submit" name="access_free" class="btn btn-secondary">{% translate "Access Free
-                            Features" %}</button>
+                        <button type="submit" name="access_free" class="btn btn-secondary">Free trial</button>
                     </form>
                 </div>
             </div>
         </div>
+        <!-- Premium Features Section -->
+        <!-- <div class="col-md-6">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">{% translate "Premium Features" %}</h2>
+                    <ul class="card-text">
+                        <li>{% translate "Manage 3 gyms" %}</li>
+                        <li>{% translate "Manage 10 people" %}</li>
+                    </ul>
+                    <form method="post" action="{% url 'subscriptions:payments:user_subscription' %}">
+                        {% csrf_token %}
+                        <button type="submit" name="subscribe" class="btn btn-primary">Premium</button>
+                    </form>
+                </div>
+            </div>
+        </div> -->
 
     </div>
 </div>
