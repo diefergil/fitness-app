@@ -32,6 +32,7 @@ from wger.gym.models import (
 class GymConfigTestCase(WgerTestCase):
     """
     Test the system wide gym configuration
+    could fail if USE_RECAPTCHA in settings_global is set to True
     """
 
     def test_default_gym(self):
