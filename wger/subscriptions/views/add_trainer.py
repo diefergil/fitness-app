@@ -20,6 +20,10 @@ def add_trainer(request, user_pk):
     user = get_object_or_404(User, pk=user_pk)
     user_gyms = Gym.objects.filter(owner=user)
 
+    # Check if the user's email is verified
+    if not user.userprofile.email_verified:
+        return HttpResponseForbidden('Your email address must be verified to create a gym.')
+
     # Check if the user already has a gym
     if user_gyms.count() >= 1:
         return HttpResponseForbidden('You cannot create more than one gym.')
