@@ -1,5 +1,5 @@
 # Django
-# Third Party
+from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import (
     ButtonHolder,
@@ -11,6 +11,77 @@ from crispy_forms.layout import (
 )
 from django import forms
 from django.utils.translation import gettext as _
+from django_recaptcha.fields import ReCaptchaField
+from django_recaptcha.widgets import ReCaptchaV3
+from django.contrib.auth.models import User
+
+
+class TrainerFormRecaptcha(forms.ModelForm):
+    phone = forms.CharField(
+        label=_('Phone'),
+        max_length=15,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    owner = forms.CharField(
+        label=_('Owner'),
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    zip_code = forms.CharField(
+        label=_('ZIP Code'),
+        max_length=10,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    city = forms.CharField(
+        label=_('City'),
+        max_length=50,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    street = forms.CharField(
+        label=_('Street'),
+        max_length=100,
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+
+    captcha = ReCaptchaField(
+        widget=ReCaptchaV3(
+            attrs={
+                'data-theme': 'light',
+                'data-size': 'invisible',
+                'data-badge': 'bottomright',
+            }
+        ),
+        label='',
+    )
+
+    class Meta:
+        model = User
+        fields = ['email', 'phone', 'owner', 'zip_code', 'city', 'street']
+
+    def __init__(self, *args, **kwargs):
+        super(TrainerFormRecaptcha, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.form_class = 'form-horizontal'
+        self.helper.label_class = 'col-md-3'
+        self.helper.field_class = 'col-md-9'
+        self.helper.layout = Layout(
+            'email',
+            'phone',
+            'owner',
+            'zip_code',
+            'city',
+            'street',
+            'captcha',
+            FormActions(
+                Submit('save', _('Update'), css_class='btn-primary'),
+                css_class='text-right',
+            ),
+        )
 
 
 class PaymentForm(forms.Form):

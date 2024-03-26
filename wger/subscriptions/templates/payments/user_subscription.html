@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load i18n static wger_extras crispy_forms_tags %}
+
+{% block title %}
+{% translate "Subscription" %}
+{% endblock %}
+
+{% block header %}
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+
+        <!-- Premium Features Section -->
+        <div class="col-md-6">
+            <div class="card text-center mb-3">
+                <div class="card-body">
+                    <h2 class="card-title">{% translate "Premium Features" %}</h2>
+                    <p class="card-text">{% translate "Upgrade to premium and get additional features like A, B, and C."
+                        %}</p>
+                    <form method="post" action="{% url 'subscriptions:payments:user_subscription' %}">
+                        {% csrf_token %}
+                        <button type="submit" name="subscribe" class="btn btn-primary">{% translate "Subscribe to
+                            Premium" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Free Features Section -->
+        <div class="col-md-6">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h2 class="card-title">{% translate "Free Features" %}</h2>
+                    <p class="card-text">{% translate "Enjoy our free features that include X, Y, and Z." %}</p>
+                    <form method="post" action="{% url 'subscriptions:payments:user_subscription' %}">
+                        {% csrf_token %}
+                        <button type="submit" name="access_free" class="btn btn-secondary">{% translate "Access Free
+                            Features" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{% if user.userprofile.email_verified %}
+<p>
+    <span class="{% fa_class 'envelope-circle-check' %} text-success"></span>
+    {% translate "Verified email" %}
+</p>
+{% else %}
+<p>
+    <span class="{% fa_class 'envelope' %}"></span>
+    {% translate "Unverified email" %}
+    <br>
+    <a href="{% url 'core:user:confirm-email' %}">{% translate "Send verification email" %}</a>
+</p>
+{% endif %}
+{% endblock %}

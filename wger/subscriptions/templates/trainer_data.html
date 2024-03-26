@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n static wger_extras django_bootstrap_breadcrumbs %}
+
+{% block title %}{{ user|format_username }}{% endblock %}
+
+{% block breadcrumbs %}
+{% breadcrumb_raw user|format_username "core:user:overview" user.pk %}
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<form method="post" action="{% url 'subscriptions:payments:add_trainer' user_pk=user.pk %}">
+    {% csrf_token %}
+    {{ form|crispy }}
+    <button type="submit" class="btn btn-primary">{% translate "Submit" %}</button>
+</form>
+{% endblock %}

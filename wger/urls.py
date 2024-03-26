@@ -236,7 +236,10 @@ urlpatterns = i18n_patterns(
         {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap',
     ),
-    path('payments/', include(('wger.payments.urls', 'payments'), namespace='payments')),
+    path(
+        'subscriptions/',
+        include(('wger.subscriptions.urls', 'subscriptions'), namespace='subscriptions'),
+    ),
 )
 
 #
