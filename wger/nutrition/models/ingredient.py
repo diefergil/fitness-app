@@ -63,6 +63,7 @@ from wger.utils.models import (
     AbstractLicenseModel,
     AbstractSubmissionModel,
 )
+from wger.utils.requests import wger_user_agent
 
 # Local
 from .ingredient_category import IngredientCategory
@@ -467,7 +468,7 @@ class Ingredient(AbstractSubmissionModel, AbstractLicenseModel, models.Model):
 
         logger.info(f'Searching for ingredient {code} in OFF')
         try:
-            api = API()
+            api = API(user_agent=wger_user_agent())
             result = api.product.get(code)
         except JSONDecodeError as e:
             logger.info(f'Got JSONDecodeError from OFF: {e}')
