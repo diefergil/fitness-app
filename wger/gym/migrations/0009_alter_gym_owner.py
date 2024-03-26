@@ -7,7 +7,6 @@ def set_default_gym_owner(apps, schema_editor):
     Gym = apps.get_model('gym', 'Gym')
 
     for gym in Gym.objects.all():
-        if not gym.owner.strip():  # Check for empty string or spaces
             gym.owner = 1 # assign current gyms to the admin
             gym.save()
 
