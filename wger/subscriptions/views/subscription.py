@@ -12,8 +12,6 @@ from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.urls import reverse
 
-from wger.subscriptions.forms import PaymentForm
-
 # wger
 from wger.subscriptions.forms import PaymentForm
 
