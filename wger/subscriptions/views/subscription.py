@@ -1,9 +1,6 @@
 # Standard Library
 import logging
 
-# Third Party
-import stripe
-
 # Django
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
@@ -12,9 +9,11 @@ from django.shortcuts import render
 from django.template.context_processors import csrf
 from django.urls import reverse
 
+# Third Party
+import stripe
+
 # wger
 from wger.subscriptions.forms import PaymentForm
-
 
 logger = logging.getLogger(__name__)
 
@@ -23,7 +22,7 @@ logger = logging.getLogger(__name__)
 def user_subscription(request):
     context = {}
     context.update(csrf(request))
-    stripe.api_key = settings.STRIPE_SECRET_KEY
+    # stripe.api_key = settings.STRIPE_SECRET_KEY
 
     if request.method == 'POST':
         if 'subscribe' in request.POST:
